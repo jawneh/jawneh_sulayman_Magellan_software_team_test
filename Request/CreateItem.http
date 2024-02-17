@@ -1,0 +1,9 @@
+POST http://localhost:5255/api/items/newitem HTTP/1.1
+content-type: application/json
+
+{
+    "ItemName": "sample2",
+    "ParentItem": 1,
+    "Cost": 0,
+    "Date": "2024-02-18T00:00:00"
+}
