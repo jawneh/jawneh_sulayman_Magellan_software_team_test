@@ -20,6 +20,7 @@ namespace MagellanTest.Services
 
         public async Task<int> CreateItem(ItemsModel newItemDto)
         {
+            //parent can be null but if its provided, it must be a valid item id
             if (newItemDto.ParentItem.HasValue)
             {
                 //check if the parent item exists in database
@@ -48,11 +49,17 @@ namespace MagellanTest.Services
             try
             {
                 var totalCost = await _itemRepository.GetItemTotalCost(itemName);
+                if (totalCost == 0)
+                {
+                    return 0;
+                }
                 return totalCost;
             }
             catch (Exception ex)
             {
-                throw new ItemNotFoundException($"Item with name {itemName} {ex.Message}");
+                throw new ItemNotFoundException(
+                    $"Item with name {itemName} parent item is unavailbale or failed to calculate total cost."
+                );
             }
         }
     }

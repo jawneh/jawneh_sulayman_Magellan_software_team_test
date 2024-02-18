@@ -29,15 +29,6 @@ namespace MagellanTest.Repositories
 
                 await using (var cmd = new NpgsqlCommand(sql, _dbConn))
                 {
-                    // if (newItemDto.ParentItem.HasValue)
-                    // {
-                    //     cmd.Parameters.AddWithValue("ParentItem", newItemDto.ParentItem); //possible null value
-                    // }
-                    // else
-                    // {
-                    //     cmd.Parameters.AddWithValue("ParentItem", DBNull.Value); //possible null value
-                    // }
-
                     cmd.Parameters.AddWithValue("ItemName", newItemDto.ItemName);
                     cmd.Parameters.AddWithValue(
                         "ParentItem",
@@ -45,9 +36,12 @@ namespace MagellanTest.Repositories
                     ); //possible null value
                     cmd.Parameters.AddWithValue("Cost", newItemDto.Cost);
                     cmd.Parameters.AddWithValue("ReqDate", newItemDto.ReqDate);
-                    var insertId = await cmd.ExecuteNonQueryAsync();
+                    // var insertId = await cmd.ExecuteNonQueryAsync();
+                    var insertId = Convert.ToInt32(await cmd.ExecuteScalarAsync());
 
-                    newItemId = (int)insertId;
+                    Console.WriteLine($"Error in Create Item: {insertId}");
+
+                    newItemId = insertId;
                 }
                 return newItemId;
             }
@@ -122,12 +116,17 @@ namespace MagellanTest.Repositories
             {
                 // Handle exceptions appropriately
                 Console.WriteLine($"Error in GetItemCostAsync: {ex.Message}");
-                // return 0;
+
                 if (ex.Message == "Column 'get_total_cost' is null")
                 {
+                    Console.WriteLine($"Error in GetItemCostAsync: {ex.Message}");
+
                     return 0;
                 }
-                throw;
+                else
+                {
+                    throw;
+                }
             }
 
             return 0;

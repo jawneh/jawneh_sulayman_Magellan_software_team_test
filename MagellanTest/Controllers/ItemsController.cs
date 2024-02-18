@@ -29,6 +29,11 @@ namespace MagellanTest.Controllers
             {
                 var item = await _itemService.GetItemTotalCost(itemName);
 
+                if (item == 0)
+                {
+                    return Ok($"Item name {itemName} parent is null");
+                }
+
                 return Ok(item);
             }
             catch (ItemNotFoundException ex)
@@ -41,7 +46,7 @@ namespace MagellanTest.Controllers
             {
                 // Handle other exceptions if needed...
                 // return StatusCode(500, "Internal server error");
-                return StatusCode(500, $"Error: {ex.Message}");
+                return BadRequest($"Error: {ex.Message}");
             }
         }
 

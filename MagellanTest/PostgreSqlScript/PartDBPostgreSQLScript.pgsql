@@ -1,11 +1,11 @@
--- Step 1: Check if Database exist and Drop then Create the Part database
+-- Step 1: Check if Database exist and Drop it
+-- then Create the Part database.
+-- Might be better to run step1 only then after connecting run the rest of the script 
 
--- DROP DATABASE IF EXISTS  part;
--- CREATE DATABASE Part;
+DROP DATABASE IF EXISTS  part;
+CREATE DATABASE Part;
 
 -- Connect to the Part database
-
--- CONNECT TO part USER postgres; 
 \c Part;
 
 -- Step 2: Create the 'item' table
@@ -27,24 +27,7 @@ INSERT INTO item (item_name, parent_item, cost, req_date) VALUES
   ('Item2', NULL, 600, '2024-03-15'),
   ('Sub1', 6, 200, '2024-02-25');
 
--- Function to calculate total cost
--- CREATE OR REPLACE FUNCTION Get_Total_Cost(p_item_name VARCHAR)
--- RETURNS INTEGER AS $$
--- DECLARE
---     total_cost INTEGER := 0;
--- BEGIN
---     WITH RECURSIVE item_cte AS (
---         SELECT id, cost FROM item WHERE item_name = p_item_name
---         UNION ALL
---         SELECT i.id, i.cost
---         FROM item i
---         JOIN item_cte c ON i.parent_item = c.id
---     )
---     SELECT INTO total_cost SUM(cost) FROM item_cte;
-    
---     RETURN total_cost;
--- END;
--- $$ LANGUAGE plpgsql;
+ -- step 4: create Get Total Cost
 CREATE OR REPLACE FUNCTION Get_Total_Cost(p_item_name VARCHAR)
 RETURNS INTEGER AS $$
 DECLARE
